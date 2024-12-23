@@ -34,6 +34,7 @@ import SmallButton from "@/components/UIelements/SmallButton";
 import { BackHandler } from "react-native";
 import CustomDialog from "@/components/UIelements/DialogComponent/CustomDialog";
 import { Card } from "react-native-elements";
+import * as SecureStore from "expo-secure-store";
 
 const DetailsPrescriptionPage = () => {
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
@@ -103,6 +104,7 @@ const DetailsPrescriptionPage = () => {
   const [defaultPrescription, setDefaultPrescription] = useState<Prescription>(
     Prescription.fromJSON(prescriptionItem)
   );
+
   const [minimizeCard, setMinimizeCard] = useState(false);
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
@@ -240,29 +242,41 @@ const DetailsPrescriptionPage = () => {
   // ฟังก์ชันสำหรับ toggle รายการทั้งหมด
   const handleToggleFilteredMedicines = () => {
     const filteredMedicines = filterMedicines();
-
+  
     // ตรวจสอบสถานะการเลือกปัจจุบันของรายการที่ตรงเงื่อนไข
     const allChecked = filteredMedicines.every((medicine) =>
       checkedIds.includes(medicine.id)
     );
-
-    setCheckedIds((prev) => {
-      const filteredIds = filteredMedicines.map((medicine) => medicine.id);
-      return [...new Set([...prev, ...filteredIds])];
-    });
-    setFlatlist2Toggle(true);
-
-    if (!allChecked) {
+  
+    // แสดง dialog ก่อน
+    if (!allChecked )  {
       setDialogProps({
         title: "เสร็จสิ้น",
         message: "เลือกรายการยาในจัดตู้ทั้งหมดแล้ว",
         highlightType: "success",
-        buttonText: "ตกลง",
-        onClose: [() => setShowDialog(false)],
+        confirmButtonText: "ยืนยัน",
+        buttonText: "ยกเลิก",
+        confirmVisible: true,
+  
+        confirmOnPress: () => {
+          // ทำงานหลังจากกด "ยืนยัน"
+          // ตั้งค่า checkedIds และทำการ toggle
+          const filteredIds = filteredMedicines.map((medicine) => medicine.id);
+          setCheckedIds((prev) => [...new Set([...prev, ...filteredIds])]);
+  
+          setShowDialog(false);
+          setFlatlist2Toggle(true);
+        },
+  
+        onClose: () => {
+          // ทำงานหลังจากกด "ยกเลิก"
+          setShowDialog(false);
+        },
       });
       setShowDialog(true);
     }
   };
+  
 
   useEffect(() => {
     // Perform filtering and counting only once on mount
@@ -309,8 +323,10 @@ const DetailsPrescriptionPage = () => {
     setFlatlist3Count(flatList3.current);
   }, []);
 
-  const handleBackPressCompletedMode = () => {
+  const handleBackPressCompletedMode = async () => {
+    const nameFromSecureStore = await SecureStore.getItemAsync("name");
     prescription.prescrip_status = "ยกเลิกจัดยา";
+    prescription.updateCancle(nameFromSecureStore, new Date().toISOString()) 
     setPrescription(prescription);
     updatePrescription(prescription);
     router.back();
@@ -509,6 +525,7 @@ const DetailsPrescriptionPage = () => {
             highlightType: "success",
             buttonText: "ตกลง",
             onClose: [() => setShowDialog(false)],
+            
           });
           setShowDialog(true);
 
@@ -536,39 +553,52 @@ const DetailsPrescriptionPage = () => {
 
   const handleSelectAllToggle = () => {
     if (prescription.prescrip_status === "รอตรวจสอบ") return;
-
-    let medicines: MedicineList[] = prescription.arranged;
-    const newCheckedIds = medicines.map((medicine) => medicine.id);
-
-    setCheckedIds(newCheckedIds);
-
-    // เพิ่ม alert แจ้งเตือนเมื่อเลือกรายการครบ
-    if (newCheckedIds.length === medicines.length) {
-      if (
-        prescription.prescrip_status !== "รอตรวจสอบ" &&
-        prescription.prescrip_status !== "กำลังตรวจสอบ"
-      ) {
-        setDialogProps({
-          title: "เสร็จสิ้น",
-          message: "เลือกรายการยาทั้งหมดแล้ว",
-          highlightType: "success",
-          buttonText: "ตกลง",
-          onClose: [() => setShowDialog(false)],
-        });
-        setShowDialog(true);
-
-        setIsCheckAll(true);
-      }
-      if (prescription.prescrip_status !== "กำลังตรวจสอบ") {
-        prescription.prescrip_status = "รอตรวจสอบ";
-      }
-      setHighlightedId(null);
-      setPrescription(prescription);
-
-      console.log("success:", JSON.stringify(prescription));
-      console.log("เลือกรายการทั้งหมดแล้ว");
+  
+    // แสดง dialog ก่อน
+    if (
+      prescription.prescrip_status !== "รอตรวจสอบ" &&
+      prescription.prescrip_status !== "กำลังตรวจสอบ"
+    ) {
+      setDialogProps({
+        title: "เสร็จสิ้น",
+        message: "เลือกรายการยาทั้งหมดแล้ว",
+        highlightType: "success",
+        confirmVisible: true,
+        confirmButtonText: "ยืนยัน",
+        confirmOnPress: () => {
+          // ทำงานหลังจากกด "ยืนยัน"
+          let medicines: MedicineList[] = prescription.arranged;
+          const newCheckedIds = medicines.map((medicine) => medicine.id);
+  
+          setCheckedIds(newCheckedIds);  // ตั้งค่ารายการที่เลือก
+  
+          // ทำการ toggle all หลังจากนั้น
+          setIsCheckAll(true);
+          setShowDialog(false);
+  
+          // อัปเดตสถานะของ prescription
+          if (prescription.prescrip_status !== "กำลังตรวจสอบ") {
+            prescription.prescrip_status = "รอตรวจสอบ";
+          }
+          setHighlightedId(null);
+          setPrescription(prescription);
+  
+          console.log("success:", JSON.stringify(prescription));
+          console.log("เลือกรายการทั้งหมดแล้ว");
+        },
+        buttonText: "ยกเลิก",
+        onClose: () => {
+          // ทำงานหลังจากกด "ยกเลิก"
+          setShowDialog(false);
+          // ไม่ต้องการให้ toggle all ทำงาน
+          setIsCheckAll(false);
+        },
+      });
+      setShowDialog(true);
     }
   };
+  
+  
 
   // ฟังก์ชันยกเลิกการเลือกยา
   const handleCancelSelection = () => {
@@ -703,6 +733,7 @@ const DetailsPrescriptionPage = () => {
     if (prescription.prescrip_status !== "กำลังตรวจสอบ") {
       setPrescription(defaultPrescription);
       prescription.prescrip_status = "กำลังจัดยา";
+      prescription.clearSelected()
       updatePrescription(prescription);
     }
     router.back();
@@ -839,8 +870,11 @@ const DetailsPrescriptionPage = () => {
                     confirmVisible: true,
                     confirmButtonText: "ยืนยัน",
                     buttonText: "ยกเลิก",
-                    confirmOnPress: () => {
+                    confirmOnPress: async () => {
+                      const nameFromSecureStore = await SecureStore.getItemAsync("name");
+
                       defaultPrescription.prescrip_status = "ยกเลิกจัดยา";
+                      defaultPrescription.updateCancle(nameFromSecureStore, new Date().toISOString())
                       console.log("default:", defaultPrescription);
                       updatePrescription(defaultPrescription);
                       router.back();
@@ -918,7 +952,7 @@ const DetailsPrescriptionPage = () => {
       {/* ปุ่ม TouchableOpacity ของจัดตู้ */}
       {(prescription.prescrip_status !== "รอตรวจสอบ" && !Flatlist2Toggle) && (
   <TouchableOpacity
-    style={styles.absoluteButton}
+    style={[styles.absoluteButton,{zIndex:1000}]}
     onPress={() => handleToggleFilteredMedicines()}
   >
     <Text style={globalStyle.tinyText}>เลือกจัดตู้ทั้งหมด</Text>
@@ -1480,8 +1514,11 @@ const DetailsPrescriptionPage = () => {
                   confirmVisible: true,
                   confirmButtonText: "ยืนยัน",
                   buttonText: "ยกเลิก",
-                  confirmOnPress: () => {
+                  confirmOnPress: async () => {
+                    const nameFromSecureStore = await SecureStore.getItemAsync("name");
+
                     (prescription.prescrip_status = "กำลังตรวจสอบ"),
+                      prescription.updateSendCheck(new Date().toISOString(), nameFromSecureStore),
                       updatePrescription(prescription),
                       router.back();
                     // Show the select all button
