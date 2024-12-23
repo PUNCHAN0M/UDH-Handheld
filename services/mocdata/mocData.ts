@@ -1,0 +1,42 @@
+export const prescriptions = [
+    {
+      status: "Pending",
+      prescriptionNumber: "6751334481",
+      patientName: "น.ส.กาญจนา ตรีโชติ",
+      prescriptionDate: "20/09/2567",
+      allergyInfo: "ปฎิเสธแพ้ยา",
+      CID: "3130600010272",
+    },
+    {
+      status: "InProgress",
+      prescriptionNumber: "6751334482",
+      patientName: "นายสมชาย สุขสันต์",
+      prescriptionDate: "21/09/2567",
+      allergyInfo: "แพ้ยา Paracetamol",
+      CID: "3130600010273",
+    },
+    {
+      status: "Completed",
+      prescriptionNumber: "6751334483",
+      patientName: "น.ส.ณัฐชยา สุขศรี",
+      prescriptionDate: "22/09/2567",
+      allergyInfo: "ปฎิเสธแพ้ยา",
+      CID: "3130600010274",
+    },
+    {
+      status: "Completed",
+      prescriptionNumber: "671334483",
+      patientName: "น.ส.ณัฐชยา สุขศรี",
+      prescriptionDate: "22/09/2567",
+      allergyInfo: "ปฎิเสธแพ้ยา",
+      CID: "3130600010274",
+    },
+    {
+      status: "Completed",
+      prescriptionNumber: "675133483",
+      patientName: "น.ส.ณัฐชยา สุขศรี",
+      prescriptionDate: "22/09/2567",
+      allergyInfo: "ปฎิเสธแพ้ยา",
+      CID: "3130600010274",
+    },
+  ];
