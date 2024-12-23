@@ -59,26 +59,26 @@ export function SessionProvider({ children }: PropsWithChildren) {
             value={{
                 signIn: async (email: string, password: string) => {
                     try {
-                        const isLoggedIn = await login(email, password); // ตรวจสอบการเข้าสู่ระบบ
-                        if (isLoggedIn.status) {
-                            console.log("Login success");
-                            setSession(`success`); // ตั้ง session จริง
+                        // const isLoggedIn = await login(email, password); // ตรวจสอบการเข้าสู่ระบบ
+                        // if (isLoggedIn.status) {
+                        //     console.log("Login success");
+                        //     setSession(`success`); // ตั้ง session จริง
 
-                            const profile_info = await getProfile(email);
-                            if (profile_info['status']) {
-                                setEmail(`${profile_info['email']}`)
-                                setName(`${profile_info['name']}`)
-                                setImage(`${profile_info['image']}`)
-                                setMobile(`${profile_info['mobile']}`)
-                            }
+                        //     const profile_info = await getProfile(email);
+                        //     if (profile_info['status']) {
+                        //         setEmail(`${profile_info['email']}`)
+                        //         setName(`${profile_info['name']}`)
+                        //         setImage(`${profile_info['image']}`)
+                        //         setMobile(`${profile_info['mobile']}`)
+                        //     }
                             
-                            router.push("/(auth)/selectRoom");
-                        } else {
-                            console.log("Login failed");
-                            setModalVisible(true); 
-                        }
-                        // setSession("success");
-                        // router.push('/(auth)/selectRoom');
+                        //     router.push("/(auth)/selectRoom");
+                        // } else {
+                        //     console.log("Login failed");
+                        //     setModalVisible(true); 
+                        // }
+                        setSession("success");
+                        router.push('/(auth)/selectRoom');
                     } catch (error) {
                         console.error("Sign-in failed:", error);
                         setSession(null); 

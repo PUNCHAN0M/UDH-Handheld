@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "TUH-Handheld",
-    "slug": "TUH-Handheld",
+    "name": "UDH-Handheld",
+    "slug": "UDH-Handheld",
     "version": "1.0.0",
     "sdkVersion": "52.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon-thu-1.png",
+    "icon": "./assets/images/icon-udh-1.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/Thu-splash-2.png",
+      "image": "./assets/images/Udh-splash-2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon-thu-1.png",
+        "foregroundImage": "./assets/images/icon-udh-1.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.mossocelot.handheldapp"
@@ -50,7 +50,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "447c025c-49a7-4be9-9628-008cdeeb58cf"
+        "projectId": "0748937e-573b-42fa-b62b-d0840a80a5f7"
       }
     }
   }

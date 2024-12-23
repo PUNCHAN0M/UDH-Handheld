@@ -35,7 +35,7 @@ const SearchBarComponent: React.FC<SearchBarProps> = ({ marginT = 80, onQueryCha
           style={[globalStyle.normalText, styles.searchBox]}
           placeholder={searchTitle}
           value={query}
-          inputMode="decimal"
+          inputMode="text"
           onChangeText={handleQueryChange} // เรียกฟังก์ชัน handleQueryChange
         />
         <View style={styles.iconContainer}>
