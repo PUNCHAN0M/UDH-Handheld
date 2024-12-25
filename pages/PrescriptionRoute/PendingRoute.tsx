@@ -15,7 +15,7 @@ import SearchBarComponent from "@/components/layouts/SearchBarComponent";
 import { Prescription } from "@/models/Prescription";
 import { Audio } from "expo-av";
 import { playSound } from "@/utility/PrescriptionUtils";
-import { getPrescription, updateonlySelectPrescription, updatePrescription } from "@/services/prescription_services";
+import { getPrescription, updatePrescription } from "@/services/prescription_services";
 import CustomDialog from "@/components/UIelements/DialogComponent/CustomDialog";
 import * as SecureStore from "expo-secure-store";
 
@@ -127,11 +127,11 @@ export const PendingRoute = () => {
   };
 
   const gotoDetailPrescription = async (matchedPrescription:Prescription) => {
-    matchedPrescription.prescrip_status = "กำลังดำเนินการ";
     const nameFromSecureStore = await SecureStore.getItemAsync("name");
-    console.log(matchedPrescription.onlySelectPrescription(new Date().toISOString(), nameFromSecureStore))
+    matchedPrescription.prescrip_status = "กำลังดำเนินการ";
+    matchedPrescription.updateSelected(new Date().toISOString(), nameFromSecureStore)
     
-    await updateonlySelectPrescription(matchedPrescription.onlySelectPrescription(new Date().toISOString(), nameFromSecureStore))
+    await updatePrescription(matchedPrescription)
 
     router.push({
       pathname: "/(auth)/DetailsPrescription",

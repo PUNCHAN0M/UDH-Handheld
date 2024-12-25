@@ -952,7 +952,7 @@ const DetailsPrescriptionPage = () => {
       {/* ปุ่ม TouchableOpacity ของจัดตู้ */}
       {(prescription.prescrip_status !== "รอตรวจสอบ" && !Flatlist2Toggle) && (
   <TouchableOpacity
-    style={[styles.absoluteButton,{zIndex:1000}]}
+    style={styles.absoluteButton}
     onPress={() => handleToggleFilteredMedicines()}
   >
     <Text style={globalStyle.tinyText}>เลือกจัดตู้ทั้งหมด</Text>

@@ -59,7 +59,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
             value={{
                 signIn: async (email: string, password: string) => {
                     try {
-                        // const isLoggedIn = await login(email, password); // ตรวจสอบการเข้าสู่ระบบ
+                        const isLoggedIn = await login(email, password); // ตรวจสอบการเข้าสู่ระบบ
                         // if (isLoggedIn.status) {
                         //     console.log("Login success");
                         //     setSession(`success`); // ตั้ง session จริง

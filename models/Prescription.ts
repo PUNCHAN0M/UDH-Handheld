@@ -31,6 +31,12 @@ export class Prescription {
     public prescrip_status: string;
     public createdAt: string;
     public arranged: MedicineList[];
+    public arrangTime: string|null = null;
+    public restBasket: string|null = null;
+    public userDoubleCheck: string|null = null;
+    public checkTime: string|null = null;
+    public userDispense: string|null = null;
+    public userDispenseTime: string|null = null;
 
     public constructor(id: string, hnCode: string, vnCode: string, queue_code: string,
         queue_num: string, full_name: string, delivery: string, prescrip_status: string,
@@ -49,7 +55,7 @@ export class Prescription {
     }
 
     public static fromJSON(json: any): Prescription {
-        return new Prescription(
+        let prescription:Prescription = new Prescription(
             json.id,
             json.hnCode,
             json.vnCode,
@@ -59,8 +65,33 @@ export class Prescription {
             json.delivery,
             json.prescrip_status,
             formatDate(json.createdAt),
-            json.arranged.map((medlist:any) => MedicineList.fromJSON(medlist)) //
+            json.arranged.map((medlist:any) => MedicineList.fromJSON(medlist)) 
         )
+
+        prescription.updateSelected(json.arrangTime, json.restBasket)
+        prescription.updateSendCheck(json.checkTime, json.userDoubleCheck)
+
+        return prescription
+    }
+
+    public updateSelected(arrangTime: string|null, restBasket: string|null):void {
+        this.arrangTime = arrangTime;
+        this.restBasket = restBasket;
+    }
+
+    public clearSelected():void {
+        this.arrangTime = null;
+        this.restBasket = null;
+    }
+
+    public updateSendCheck(checkTime: string|null, userDoubleCheck: string|null):void {
+        this.checkTime = checkTime;
+        this.userDoubleCheck = userDoubleCheck;
+    }
+
+    public updateCancle(userDispense: string|null, userDispenseTime: string|null): void {
+        this.userDispense = userDispense;
+        this.userDispenseTime = userDispenseTime;
     }
 
     /**
@@ -83,37 +114,5 @@ export class Prescription {
 
         // Update the arranged list with merged values
         this.arranged = Array.from(mergedMap.values());
-    }
-
-    public onlySelectPrescription(arrangTime: string, restBasket: string|null): PrescriptionUpdateOnlySelect {
-        return new PrescriptionUpdateOnlySelect(
-            this.id,
-            this.hnCode,
-            this.vnCode,
-            this.queue_code,
-            this.queue_num,
-            this.full_name,
-            this.delivery,
-            this.prescrip_status,
-            this.createdAt,
-            arrangTime,
-            restBasket != null ? restBasket : "",
-            this.arranged
-        );
-    }
-}
-
-export class PrescriptionUpdateOnlySelect extends Prescription {
-    public arrangTime: string;
-    public restBasket: string;
-
-    constructor(
-        id: string, hnCode: string, vnCode: string, queue_code: string,
-        queue_num: string, full_name: string, delivery: string, prescrip_status: string,
-        createdAt: string, arrangTime: string, restBasket: string, arranged: MedicineList[] = []
-    ) {
-        super(id, hnCode, vnCode, queue_code, queue_num, full_name, delivery, prescrip_status, createdAt, arranged);
-        this.arrangTime = arrangTime;
-        this.restBasket = restBasket;
     }
 }
