@@ -1,5 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
+import HeaderComponent from "@/components/layouts/HeaderComponent";
+
 
 export const globalStyle = StyleSheet.create({
   primaryColor: { color: "#ca00fc" },
@@ -7,6 +9,8 @@ export const globalStyle = StyleSheet.create({
   tertiary: { color: "#F1DAFF" },
   fourColor:{color:"#ebbef7"},
   quaternary: { color: "#E0F7FA" },
+  blackColor: { color: "#000000" },
+  whiteColor: { color: "white" },
   tinyText: {
     fontSize: 14,
     color: "#141414",

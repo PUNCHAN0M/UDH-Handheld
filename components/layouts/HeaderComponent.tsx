@@ -15,6 +15,7 @@ import SignOutDialog from "../UIelements/DialogComponent/SignOutDialog";
 import { useSession } from "@/context/authentication";
 import CustomDialog from "../UIelements/DialogComponent/CustomDialog";
 import IpDialog from "../UIelements/DialogComponent/IpDialog";
+import ColorSelectedDialog from "../UIelements/DialogComponent/ColorSelectedDialog";
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
@@ -110,6 +111,22 @@ const HeaderComponent: React.FC<TopnavProps> = ({
     handleCloseSignOutDialog(); // Close the SignOutDialog after signing out
   };
 
+  const [selectedColors, setSelectedColors] = useState({
+    primary: "",
+    secondary: "",
+    tertiary: "",
+  });
+
+  const handleColorSelection = (colors: {
+    primary: string;
+    secondary: string;
+    tertiary: string;
+  }) => {
+    console.log(`color ${colors.primary+colors.primary+colors.tertiary}`)
+    setSelectedColors(colors);
+    // Do something with the selected colors
+  };
+
   return (
     <View>
       {showDialog && dialogProps && (
@@ -163,9 +180,14 @@ const HeaderComponent: React.FC<TopnavProps> = ({
           onClose={handleCloseSignOutDialog}
           onSignOut={handleSignOut} // Pass the handleSignOut function
         />
-        <IpDialog
+        {/* <IpDialog
           visible={isPopupVisible}
           onClose={() => setPopupVisible(false)}
+        /> */}
+        <ColorSelectedDialog
+          visible={isPopupVisible}
+          onClose={()=> setPopupVisible(false)}
+          onColorsSelected={handleColorSelection}
         />
       </View>
     </View>
