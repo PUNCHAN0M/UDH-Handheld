@@ -38,7 +38,7 @@ const IpDialog: React.FC<IpDialogProps> = ({ visible, onClose }) => {
   // const defaultApi6 = `http://${ipUdh}:${port1}/api/headheld/stock`;
   // // UDH
   const defaultName = "UDH-Handheld";
-  const ipUdh = "172.16.2.254" 
+  const ipUdh = "172.16.2.254" //
   
   const port1 = 3000
   const port2 = 3333

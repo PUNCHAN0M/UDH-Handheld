@@ -27,21 +27,21 @@ import { Prescription } from "@/models/Prescription";
 import { prescriptions } from "@/services/mocdata/mocData";
 import LongButtonComponent from "@/components/UIelements/LongButtonComponent";
 import { Audio } from "expo-av";
-import { playSound } from "@/utility/PrescriptionUtils"
+import { playSound } from "@/utility/PrescriptionUtils";
 import { PendingRoute } from "./PrescriptionRoute/PendingRoute";
 import { CompletedRoute } from "./PrescriptionRoute/CompletedRoute";
 import { globalStyle } from "@/assets/globalStyle";
-
+import { useColorContext } from "@/components/UIelements/DialogComponent/ColorContext";
 // PrescriptionPage Component
 export default function PrescriptionPage() {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
-  
-  const router = useRouter();
 
+  const router = useRouter();
+  const { primaryColor, secondaryColor, tertiaryColor } = useColorContext();
   const renderScene = SceneMap({
-    first: () => <PendingRoute/>,
-    second: () => <CompletedRoute/>,
+    first: () => <PendingRoute />,
+    second: () => <CompletedRoute />,
   });
 
   type Route = {
@@ -58,7 +58,7 @@ export default function PrescriptionPage() {
       {...props}
       style={styles.tabBar}
       indicatorStyle={{
-        backgroundColor: globalStyle.secondaryColor.color,
+        backgroundColor: secondaryColor,
         height: 4,
         borderRadius: 8,
       }}
@@ -76,7 +76,9 @@ export default function PrescriptionPage() {
   return (
     <View style={{ flex: 1 }}>
       <HeaderComponent
-        onPressAlert={()=>{router.back()}}
+        onPressAlert={() => {
+          router.back();
+        }}
         showBackIcon={true}
         titleText={"ดูใบสั่งยา"}
         showAccountIcon={true}
@@ -124,6 +126,6 @@ const styles = StyleSheet.create({
   hideTextInput: {
     position: "absolute",
     zIndex: -9999,
-    opacity: 0
+    opacity: 0,
   },
 });

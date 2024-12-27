@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from "@rneui/themed";
 import { View, StyleSheet, TextStyle } from "react-native";
 import { globalStyle } from "@/assets/globalStyle";
+import { useColorContext } from './DialogComponent/ColorContext';
 
 // types for the props
 interface LongButtonProps {
@@ -18,10 +19,12 @@ const LongButtonComponent: React.FC<LongButtonProps> = ({
   titleStyle, // Destructure titleStyle
 }) => {
   // กำหนดสีพื้นหลังและสีตัวอักษรตาม mode
+  const {primaryColor,secondaryColor,tertiaryColor} = useColorContext()
+
   const buttonBackgroundColor = 
     mode === 'warning' ? '#FF797C' : 
     mode === 'hiding' ? '#a8a6a6' :
-    mode === 'waiting' ? '#a8a6a6' : globalStyle.tertiary.color; // สีพื้นหลังของโหมด waiting
+    mode === 'waiting' ? '#a8a6a6' : primaryColor; // สีพื้นหลังของโหมด waiting
   
   // If the mode is 'hiding', set height and width to 0, and hide the button
   if (mode === 'hiding') {

@@ -16,6 +16,9 @@ import { useSession } from "@/context/authentication";
 import CustomDialog from "../UIelements/DialogComponent/CustomDialog";
 import IpDialog from "../UIelements/DialogComponent/IpDialog";
 import ColorSelectedDialog from "../UIelements/DialogComponent/ColorSelectedDialog";
+import { useColorContext } from "../UIelements/DialogComponent/ColorContext";
+import { Dialog } from "react-native-elements";
+import SmallButton from "../UIelements/SmallButton";
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
@@ -45,6 +48,9 @@ const HeaderComponent: React.FC<TopnavProps> = ({
   const { signOut } = useSession();
   const [showDialog, setShowDialog] = useState(false);
   const [isPopupVisible, setPopupVisible] = useState(false);
+  const [isPopupIpVisible, setPopupIpVisible] = useState(false);
+  const [isPopupColorVisible, setIsPopupColorVisible] = useState(false);
+
   const [dialogProps, setDialogProps] = useState<{
     title: string;
     message: string;
@@ -55,6 +61,8 @@ const HeaderComponent: React.FC<TopnavProps> = ({
     confirmOnPress?: () => void;
     onClose?: (() => void) | (() => void)[];
   } | null>(null);
+
+  const { primaryColor, tertiaryColor } = useColorContext(); // ดึงค่าสีจาก Context
 
   const handleBackPress = () => {
     console.log("ปุ่มย้อนกลับถูกกด"); // แสดงข้อความใน console เมื่อปุ่มย้อนกลับถูกกด
@@ -122,9 +130,17 @@ const HeaderComponent: React.FC<TopnavProps> = ({
     secondary: string;
     tertiary: string;
   }) => {
-    console.log(`color ${colors.primary+colors.primary+colors.tertiary}`)
+    console.log(`color ${colors.primary + colors.primary + colors.tertiary}`);
     setSelectedColors(colors);
     // Do something with the selected colors
+  };
+  const handleOnPressIpSetting = () => {
+    setPopupIpVisible(!isPopupIpVisible);
+    setPopupVisible(false);
+  };
+  const handleOnColorIpSetting = () => {
+    setIsPopupColorVisible(!isPopupColorVisible);
+    setPopupVisible(false);
   };
 
   return (
@@ -145,7 +161,7 @@ const HeaderComponent: React.FC<TopnavProps> = ({
           />
         </View>
       )}
-      <View style={TopnavStyle.TopNav}>
+      <View style={[TopnavStyle.TopNav, { backgroundColor: primaryColor }]}>
         {/* Back button */}
         <View style={TopnavStyle.LeftComponent}>
           {showBackIcon && (
@@ -180,14 +196,32 @@ const HeaderComponent: React.FC<TopnavProps> = ({
           onClose={handleCloseSignOutDialog}
           onSignOut={handleSignOut} // Pass the handleSignOut function
         />
-        {/* <IpDialog
-          visible={isPopupVisible}
-          onClose={() => setPopupVisible(false)}
-        /> */}
+
+        <Dialog
+          isVisible={isPopupVisible}
+          onBackdropPress={() => setPopupVisible(!isPopupVisible)}
+        >
+          <Text style={[globalStyle.largeText, { textAlign: "center",marginBottom:10,fontWeight:"bold" }]}>
+            Setting
+          </Text>
+          <View style={{ height: 80, justifyContent: "space-between" }}>
+            <SmallButton
+              buttonTitle="Ip Setting"
+              onPress={() => handleOnPressIpSetting()}
+            ></SmallButton>
+            <SmallButton
+              buttonTitle="Color Setting"
+              onPress={() => handleOnColorIpSetting()}
+            ></SmallButton>
+          </View>{" "}
+        </Dialog>
+        <IpDialog
+          visible={isPopupIpVisible}
+          onClose={() => setPopupIpVisible(!isPopupIpVisible)}
+        />
         <ColorSelectedDialog
-          visible={isPopupVisible}
-          onClose={()=> setPopupVisible(false)}
-          onColorsSelected={handleColorSelection}
+          visible={isPopupColorVisible}
+          onClose={() => setIsPopupColorVisible(!isPopupColorVisible)}
         />
       </View>
     </View>
@@ -202,7 +236,6 @@ const TopnavStyle = StyleSheet.create({
     zIndex: 100,
   },
   TopNav: {
-    backgroundColor: "#d8a9fc",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

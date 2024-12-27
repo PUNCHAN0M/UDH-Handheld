@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Button } from "@rneui/themed";
 import { View, StyleSheet, Dimensions } from "react-native";
 import { globalStyle } from "@/assets/globalStyle";
+import { useColorContext } from './DialogComponent/ColorContext';
 
 const { width } = Dimensions.get("window");
 const fontSize = globalStyle.smallText.fontSize;
 const fontWeight = globalStyle.smallText.fontWeight;
-const color = globalStyle.smallText.color;
 
 // Types for the props
 interface SmallButtonProps {
@@ -24,9 +24,10 @@ const SmallButton: React.FC<SmallButtonProps> = ({
   onPress, 
   disabled = false
 }) => {
+  const {primaryColor} = useColorContext();
   const [isDisabled, setIsDisabled] = useState(disabled);
   const buttonWidth = size === 'small' ? width - 270 : width - 140;
-  const buttonBackgroundColor = mode === 'warning' ? '#FF2B2B' : globalStyle.primaryColor.color; 
+  const buttonBackgroundColor = mode === 'warning' ? '#FF2B2B' : primaryColor; 
   const buttonTitleColor = mode === 'warning' ? '#E0F7FA' : "white"; 
 
   const handlePress = () => {

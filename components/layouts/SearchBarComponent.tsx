@@ -1,7 +1,15 @@
 import React, { useState } from "react";
-import { TextInput, View, StyleSheet, Dimensions, Text, TouchableOpacity } from "react-native";
-import { Icon } from '@rneui/themed';
+import {
+  TextInput,
+  View,
+  StyleSheet,
+  Dimensions,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import { Icon } from "@rneui/themed";
 import { globalStyle } from "@/assets/globalStyle";
+import { useColorContext } from "../UIelements/DialogComponent/ColorContext";
 
 const { width, height } = Dimensions.get("window");
 
@@ -12,8 +20,14 @@ interface SearchBarProps {
   searchTitle?: string;
 }
 
-const SearchBarComponent: React.FC<SearchBarProps> = ({ marginT = 80, onQueryChange, onTypingStatusChange,searchTitle ="ค้นหาใบสั่งยา"}) => {
+const SearchBarComponent: React.FC<SearchBarProps> = ({
+  marginT = 80,
+  onQueryChange,
+  onTypingStatusChange,
+  searchTitle = "ค้นหาใบสั่งยา",
+}) => {
   const [query, setQuery] = useState("");
+  const { primaryColor, secondaryColor, tertiaryColor } = useColorContext();
 
   const handleQueryChange = (text: string) => {
     setQuery(text);
@@ -29,7 +43,7 @@ const SearchBarComponent: React.FC<SearchBarProps> = ({ marginT = 80, onQueryCha
 
   return (
     <View style={[styles.searchBarContainer, { marginTop: height / marginT }]}>
-      <View style={styles.searchContainer}>
+      <View style={[styles.searchContainer, { borderColor: tertiaryColor }]}>
         <Icon name="search" iconStyle={{ marginHorizontal: 10 }} />
         <TextInput
           style={[globalStyle.normalText, styles.searchBox]}
@@ -41,7 +55,11 @@ const SearchBarComponent: React.FC<SearchBarProps> = ({ marginT = 80, onQueryCha
         <View style={styles.iconContainer}>
           {query ? (
             <TouchableOpacity onPress={handleClear}>
-              <Icon name="close" iconStyle={{ marginHorizontal: 10 }} size={20} />
+              <Icon
+                name="close"
+                iconStyle={{ marginHorizontal: 10 }}
+                size={20}
+              />
             </TouchableOpacity>
           ) : null}
         </View>
@@ -63,13 +81,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderRadius: 12,
-    borderColor: globalStyle.tertiary.color,
   },
   searchBox: {
     width: width - 100,
-    height: 50
+    height: 50,
   },
-  iconContainer: {    
+  iconContainer: {
     width: 40,
     alignItems: "center",
     justifyContent: "center",

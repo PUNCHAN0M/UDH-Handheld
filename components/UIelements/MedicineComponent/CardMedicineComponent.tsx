@@ -4,6 +4,7 @@ import { Card } from "react-native-elements";
 import { globalStyle } from "@/assets/globalStyle";
 import ExpandableButtonComponent from "../../layouts/ExpandableButtonComponent";
 import DetailsCardMedicineComponent from "./DetailsCardMedicineComponent";
+import { useColorContext } from "@/components/UIelements/DialogComponent/ColorContext";
 
 // Import checkbox icons
 const checkboxCheckedIcon = require("../../../assets/images/checkboxChecked.png");
@@ -38,6 +39,7 @@ const CardMedicineComponent: React.FC<CardMedicineComponentProps> = ({
   onPressDetails,
   shelfStatus,
 }) => {
+  const { primaryColor, secondaryColor, tertiaryColor } = useColorContext(); // ดึงค่าสีจาก Context
   const filterAlphabeticValues = (sshelf: string | undefined) => {
     if (!sshelf) return [];
     return sshelf
@@ -84,7 +86,7 @@ const CardMedicineComponent: React.FC<CardMedicineComponentProps> = ({
     containerStyle: [
       globalStyle.card,
       highlighted && styles.highlightedCard,
-      isMultipleSshelf && styles.multipleSshelfCard,
+      isMultipleSshelf && {backgroundColor: primaryColor},
     ],
   };
 
@@ -172,9 +174,7 @@ const styles = StyleSheet.create({
     borderColor: "#057500",
     borderRadius: 10,
   },
-  multipleSshelfCard: {
-    backgroundColor: globalStyle.fourColor.color, // สีฟ้าสำหรับ sshelf > 1
-  },
+
   detailsButtonContainer: {
     width: "100%",
   },

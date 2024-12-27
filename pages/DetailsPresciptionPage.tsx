@@ -35,8 +35,11 @@ import { BackHandler } from "react-native";
 import CustomDialog from "@/components/UIelements/DialogComponent/CustomDialog";
 import { Card } from "react-native-elements";
 import * as SecureStore from "expo-secure-store";
+import { useColorContext } from "@/components/UIelements/DialogComponent/ColorContext";
 
 const DetailsPrescriptionPage = () => {
+  const { primaryColor, secondaryColor, tertiaryColor } = useColorContext(); // ดึงค่าสีจาก Context
+
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
   const [showSelectAllButton, setShowSelectAllButton] = useState(false);
   const [showCheckbox, setShowCheckbox] = useState(false);
@@ -241,15 +244,16 @@ const DetailsPrescriptionPage = () => {
 
   // ฟังก์ชันสำหรับ toggle รายการทั้งหมด
   const handleToggleFilteredMedicines = () => {
+
     const filteredMedicines = filterMedicines();
-  
+
     // ตรวจสอบสถานะการเลือกปัจจุบันของรายการที่ตรงเงื่อนไข
     const allChecked = filteredMedicines.every((medicine) =>
       checkedIds.includes(medicine.id)
     );
-  
+
     // แสดง dialog ก่อน
-    if (!allChecked )  {
+    if (!allChecked) {
       setDialogProps({
         title: "เสร็จสิ้น",
         message: "เลือกรายการยาในจัดตู้ทั้งหมดแล้ว",
@@ -257,17 +261,17 @@ const DetailsPrescriptionPage = () => {
         confirmButtonText: "ยืนยัน",
         buttonText: "ยกเลิก",
         confirmVisible: true,
-  
+
         confirmOnPress: () => {
           // ทำงานหลังจากกด "ยืนยัน"
           // ตั้งค่า checkedIds และทำการ toggle
           const filteredIds = filteredMedicines.map((medicine) => medicine.id);
           setCheckedIds((prev) => [...new Set([...prev, ...filteredIds])]);
-  
+
           setShowDialog(false);
           setFlatlist2Toggle(true);
         },
-  
+
         onClose: () => {
           // ทำงานหลังจากกด "ยกเลิก"
           setShowDialog(false);
@@ -276,7 +280,6 @@ const DetailsPrescriptionPage = () => {
       setShowDialog(true);
     }
   };
-  
 
   useEffect(() => {
     // Perform filtering and counting only once on mount
@@ -326,7 +329,7 @@ const DetailsPrescriptionPage = () => {
   const handleBackPressCompletedMode = async () => {
     const nameFromSecureStore = await SecureStore.getItemAsync("name");
     prescription.prescrip_status = "ยกเลิกจัดยา";
-    prescription.updateCancle(nameFromSecureStore, new Date().toISOString()) 
+    prescription.updateCancle(nameFromSecureStore, new Date().toISOString());
     setPrescription(prescription);
     updatePrescription(prescription);
     router.back();
@@ -525,7 +528,6 @@ const DetailsPrescriptionPage = () => {
             highlightType: "success",
             buttonText: "ตกลง",
             onClose: [() => setShowDialog(false)],
-            
           });
           setShowDialog(true);
 
@@ -553,7 +555,7 @@ const DetailsPrescriptionPage = () => {
 
   const handleSelectAllToggle = () => {
     if (prescription.prescrip_status === "รอตรวจสอบ") return;
-  
+
     // แสดง dialog ก่อน
     if (
       prescription.prescrip_status !== "รอตรวจสอบ" &&
@@ -569,20 +571,20 @@ const DetailsPrescriptionPage = () => {
           // ทำงานหลังจากกด "ยืนยัน"
           let medicines: MedicineList[] = prescription.arranged;
           const newCheckedIds = medicines.map((medicine) => medicine.id);
-  
-          setCheckedIds(newCheckedIds);  // ตั้งค่ารายการที่เลือก
-  
+
+          setCheckedIds(newCheckedIds); // ตั้งค่ารายการที่เลือก
+
           // ทำการ toggle all หลังจากนั้น
           setIsCheckAll(true);
           setShowDialog(false);
-  
+
           // อัปเดตสถานะของ prescription
           if (prescription.prescrip_status !== "กำลังตรวจสอบ") {
             prescription.prescrip_status = "รอตรวจสอบ";
           }
           setHighlightedId(null);
           setPrescription(prescription);
-  
+
           console.log("success:", JSON.stringify(prescription));
           console.log("เลือกรายการทั้งหมดแล้ว");
         },
@@ -597,8 +599,6 @@ const DetailsPrescriptionPage = () => {
       setShowDialog(true);
     }
   };
-  
-  
 
   // ฟังก์ชันยกเลิกการเลือกยา
   const handleCancelSelection = () => {
@@ -733,7 +733,7 @@ const DetailsPrescriptionPage = () => {
     if (prescription.prescrip_status !== "กำลังตรวจสอบ") {
       setPrescription(defaultPrescription);
       prescription.prescrip_status = "กำลังจัดยา";
-      prescription.clearSelected()
+      prescription.clearSelected();
       updatePrescription(prescription);
     }
     router.back();
@@ -871,10 +871,14 @@ const DetailsPrescriptionPage = () => {
                     confirmButtonText: "ยืนยัน",
                     buttonText: "ยกเลิก",
                     confirmOnPress: async () => {
-                      const nameFromSecureStore = await SecureStore.getItemAsync("name");
+                      const nameFromSecureStore =
+                        await SecureStore.getItemAsync("name");
 
                       defaultPrescription.prescrip_status = "ยกเลิกจัดยา";
-                      defaultPrescription.updateCancle(nameFromSecureStore, new Date().toISOString())
+                      defaultPrescription.updateCancle(
+                        nameFromSecureStore,
+                        new Date().toISOString()
+                      );
                       console.log("default:", defaultPrescription);
                       updatePrescription(defaultPrescription);
                       router.back();
@@ -900,6 +904,7 @@ const DetailsPrescriptionPage = () => {
                 styles.smallButton,
                 checkedIds.length === prescription.arranged.length && {
                   opacity: 0,
+                  backgroundColor: primaryColor,
                 },
               ]}
               onPress={handleSelectAllToggle}
@@ -924,7 +929,10 @@ const DetailsPrescriptionPage = () => {
             <Text style={globalStyle.tinyText}>
               {showSelectAllButton ? (
                 <TouchableOpacity
-                  style={styles.smallButton}
+                  style={[
+                    styles.smallButton,
+                    { backgroundColor: primaryColor },
+                  ]}
                   onPress={handleSelectAllToggle}
                 >
                   <Text style={globalStyle.tinyText}>เลือกทั้งหมด</Text>
@@ -932,7 +940,10 @@ const DetailsPrescriptionPage = () => {
               ) : (
                 prescription.prescrip_status !== "กำลังตรวจสอบ" && (
                   <TouchableOpacity
-                    style={styles.smallButton}
+                    style={[
+                      styles.smallButton,
+                      { backgroundColor: primaryColor },
+                    ]}
                     onPress={handleSelectAllToggle}
                   >
                     <Text style={globalStyle.tinyText}>เลือกทั้งหมด</Text>
@@ -950,15 +961,17 @@ const DetailsPrescriptionPage = () => {
         )}
       </View>
       {/* ปุ่ม TouchableOpacity ของจัดตู้ */}
-      {(prescription.prescrip_status !== "รอตรวจสอบ" && !Flatlist2Toggle) && (
-  <TouchableOpacity
-    style={styles.absoluteButton}
-    onPress={() => handleToggleFilteredMedicines()}
-  >
-    <Text style={globalStyle.tinyText}>เลือกจัดตู้ทั้งหมด</Text>
-  </TouchableOpacity>
-)}
-
+      {prescription.prescrip_status !== "รอตรวจสอบ" && !Flatlist2Toggle && (
+        <TouchableOpacity
+          style={[
+            styles.absoluteButton,
+            { backgroundColor: primaryColor},
+          ]}
+          onPress={() => handleToggleFilteredMedicines()}
+        >
+          <Text style={globalStyle.tinyText}>เลือกจัดตู้ทั้งหมด</Text>
+        </TouchableOpacity>
+      )}
 
       <View style={[minimizeCard && { height: "100%" }]}>
         <View style={styles.containerFlatlist}>
@@ -966,7 +979,7 @@ const DetailsPrescriptionPage = () => {
             {!isFlatListVisible2 && !isFlatListVisible3 && (
               <View
                 style={{
-                  backgroundColor: globalStyle.tertiary.color,
+                  backgroundColor: primaryColor,
                   margin: 2,
                   height: 40,
                   justifyContent: "center",
@@ -1019,7 +1032,7 @@ const DetailsPrescriptionPage = () => {
             {!isFlatListVisible1 && !isFlatListVisible3 && (
               <View
                 style={{
-                  backgroundColor: globalStyle.tertiary.color,
+                  backgroundColor: primaryColor,
                   margin: 2,
                   height: 40,
                   justifyContent: "center",
@@ -1046,12 +1059,17 @@ const DetailsPrescriptionPage = () => {
                   >
                     จัดตู้
                   </Text>
-                  {Flatlist2Toggle && 
-                  <Text style={{
-                    fontSize: 15,
-                    marginRight: 60,
-                    color:'green'
-                  }}>เลือกทั้งหมดแล้ว</Text>}
+                  {Flatlist2Toggle && (
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        marginRight: 60,
+                        color: "green",
+                      }}
+                    >
+                      เลือกทั้งหมดแล้ว
+                    </Text>
+                  )}
                   <Text
                     style={{
                       fontSize: 15,
@@ -1078,7 +1096,7 @@ const DetailsPrescriptionPage = () => {
             {!isFlatListVisible1 && !isFlatListVisible2 && (
               <View
                 style={{
-                  backgroundColor: globalStyle.tertiary.color,
+                  backgroundColor: primaryColor,
                   margin: 2,
                   height: 40,
                   justifyContent: "center",
@@ -1135,6 +1153,7 @@ const DetailsPrescriptionPage = () => {
                   zIndex: isFlatListVisible1 ? 1 : -999,
                   position: isFlatListVisible1 ? "relative" : "absolute",
                   opacity: isFlatListVisible1 ? 1 : 0,
+                  borderColor: primaryColor, // Gray color with 30% opacity
                 },
               ]}
             >
@@ -1204,6 +1223,7 @@ const DetailsPrescriptionPage = () => {
                   zIndex: isFlatListVisible2 ? 1 : -999,
                   position: isFlatListVisible2 ? "relative" : "absolute",
                   opacity: isFlatListVisible2 ? 1 : 0,
+                  borderColor: primaryColor, // Gray color with 30% opacity
                 },
               ]}
             >
@@ -1274,6 +1294,7 @@ const DetailsPrescriptionPage = () => {
                   zIndex: isFlatListVisible3 ? 1 : -999, // Adjust zIndex based on visibility
                   position: isFlatListVisible3 ? "relative" : "absolute", // Change position based on zIndex
                   opacity: isFlatListVisible3 ? 1 : 0, // Adjust opacity based on visibility
+                  borderColor: primaryColor, // Gray color with 30% opacity
                 },
               ]}
             >
@@ -1515,10 +1536,15 @@ const DetailsPrescriptionPage = () => {
                   confirmButtonText: "ยืนยัน",
                   buttonText: "ยกเลิก",
                   confirmOnPress: async () => {
-                    const nameFromSecureStore = await SecureStore.getItemAsync("name");
+                    const nameFromSecureStore = await SecureStore.getItemAsync(
+                      "name"
+                    );
 
                     (prescription.prescrip_status = "กำลังตรวจสอบ"),
-                      prescription.updateSendCheck(new Date().toISOString(), nameFromSecureStore),
+                      prescription.updateSendCheck(
+                        new Date().toISOString(),
+                        nameFromSecureStore
+                      ),
                       updatePrescription(prescription),
                       router.back();
                     // Show the select all button
@@ -1619,7 +1645,7 @@ const styles = StyleSheet.create({
   },
   smallButton: {
     marginTop: 0,
-    backgroundColor: globalStyle.secondaryColor.color,
+
     padding: 5,
     borderRadius: 8,
   },
@@ -1627,7 +1653,6 @@ const styles = StyleSheet.create({
     margin: 0,
     borderRadius: 5,
     backgroundColor: "white",
-    borderColor: "#E268FF", // Gray color with 30% opacity
     borderWidth: 2,
     height: "90%",
   },
@@ -1734,7 +1759,6 @@ const styles = StyleSheet.create({
     top: "48.9%", // ระยะห่างจากด้านล่าง
     right: "34%", // ระยะห่างจากด้านขวา
     marginTop: 0,
-    backgroundColor: globalStyle.secondaryColor.color,
     padding: 5,
     borderRadius: 8,
   },
