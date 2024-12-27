@@ -1,13 +1,13 @@
 import { StyleSheet, Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
 import HeaderComponent from "@/components/layouts/HeaderComponent";
-
+import ColorSelectedDialog from "@/components/UIelements/DialogComponent/ColorSelectedDialog";
 
 export const globalStyle = StyleSheet.create({
   primaryColor: { color: "#ca00fc" },
   secondaryColor: { color: "#d8a9fc" },
   tertiary: { color: "#F1DAFF" },
-  fourColor:{color:"#ebbef7"},
+  fourColor: { color: "#ebbef7" },
   quaternary: { color: "#E0F7FA" },
   blackColor: { color: "#000000" },
   whiteColor: { color: "white" },

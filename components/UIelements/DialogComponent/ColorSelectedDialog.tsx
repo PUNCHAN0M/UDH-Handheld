@@ -152,6 +152,7 @@ const ColorSelectedDialog: React.FC<ColorSelectedDialogProps> = ({
   );
 };
 
+
 export default ColorSelectedDialog;
 
 const styles = StyleSheet.create({
