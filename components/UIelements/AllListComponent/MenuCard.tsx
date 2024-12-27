@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { globalStyle } from '@/assets/globalStyle';
 import { Card, Icon } from 'react-native-elements';
+import { useColorContext } from '../DialogComponent/ColorContext';
 
 const { width } = Dimensions.get("window");
 const cardProps = { containerStyle: globalStyle.cardMenu };
@@ -10,7 +11,7 @@ type MenuCardProps = { icon: string; title: string; onPress: () => void };
 
 const MenuCard = ({ icon, title, onPress }: MenuCardProps) => {
   const [isDisabled, setIsDisabled] = useState(false); // State for disabling the card
-
+  const {primaryColor} = useColorContext();
   const handlePress = () => {
     if (onPress && !isDisabled) {
       onPress();
@@ -28,7 +29,7 @@ const MenuCard = ({ icon, title, onPress }: MenuCardProps) => {
         onPress={handlePress}
         disabled={isDisabled} // Disable the touchable when isDisabled is true
       >
-        <Icon name={icon} size={75} color={globalStyle.primaryColor.color} iconStyle={{ padding: 10 }} />
+        <Icon name={icon} size={75} color={primaryColor} iconStyle={{ padding: 10 }} />
         <Text style={[globalStyle.normalText]}>{title}</Text>
       </TouchableOpacity>
     </Card>

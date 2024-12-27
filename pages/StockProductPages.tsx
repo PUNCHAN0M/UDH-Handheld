@@ -29,6 +29,7 @@ import SmallButton from "@/components/UIelements/SmallButton";
 import { playSound } from "@/utility/PrescriptionUtils";
 import { useRouter } from "expo-router";
 import CustomDialog from "@/components/UIelements/DialogComponent/CustomDialog";
+import { useColorContext } from "@/components/UIelements/DialogComponent/ColorContext";
 
 export default function StockProductPages() {
   const [medicines, setMedicines] = useState<Medicine[]>([]);
@@ -47,6 +48,7 @@ export default function StockProductPages() {
   const [currentPage, setCurrentPage] = useState(0);
   const [showDialog, setShowDialog] = useState(false);
   const [buttonModalStatus, setButtonModalStatus] = useState("");
+  const {primaryColor} = useColorContext();
   const [dialogProps, setDialogProps] = useState<{
     title: string;
     message: string;
@@ -487,7 +489,7 @@ export default function StockProductPages() {
                     handleUpdateStock();
                     console.log("บันทึกแล้ว");
                   }}
-                  style={[styles.optionButton, { backgroundColor: globalStyle.primaryColor.color }]}
+                  style={[styles.optionButton, { backgroundColor: primaryColor }]}
                 >
                   <Text style={[styles.modalButtonText, { color: "#fff" }]}>
                     เบิกยา

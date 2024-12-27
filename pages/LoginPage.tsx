@@ -7,11 +7,12 @@ import { useRouter } from "expo-router";
 import { useSession } from "@/context/authentication";
 import * as SecureStore from "expo-secure-store";
 import { color } from "@rneui/base";
+import { useColorContext } from "@/components/UIelements/DialogComponent/ColorContext";
+
 
 const eyeSlashIcon = require("../assets/images/eye-slash.png");
 const eyeIcon = require("../assets/images/eye.png");
 
-// Type test eeweieiei
 interface LoginPageState {
   username: string;
   password: string;
@@ -25,26 +26,24 @@ const LoginPage: React.FC = () => {
     password: "",
     isPasswordVisible: false,
   });
+  const {primaryColor} = useColorContext()
+
 
   const [appName, setAppName] = useState<string|null>("")
-  const [isLoading, setIsLoading] = useState(false); // State for loading spinner
+  const [isLoading, setIsLoading] = useState(false); 
   const router = useRouter();
 
-
   const handleLoginPress = async () => {
-    setIsLoading(true); // แสดงสถานะกำลังโหลด
+    setIsLoading(true); 
     try {
         console.log(`Username: ${state.username}, Password: ${state.password}`);
-        await signIn(state.username, state.password); // ดำเนินการเข้าสู่ระบบทันที
-        // Handle successful login
+        await signIn(state.username, state.password); 
     } catch (error) {
         console.error("Login failed:", error);
     } finally {
-        setIsLoading(false); // ซ่อนสถานะกำลังโหลด
+        setIsLoading(false); 
     }
 };
-
-  
 
   const handleUsernameChange = (text: string) => {
     setState((prevState) => ({
@@ -74,24 +73,21 @@ const LoginPage: React.FC = () => {
   }
 
   useEffect(()=>{
-    // เรียกข้อมูลเมื่อเริ่มต้น
     getAppName();
 
-    // ตั้ง interval เพื่อตรวจสอบการเปลี่ยนแปลง
     const intervalId = setInterval(() => {
       getAppName();
-    }, 1000); // ตรวจสอบทุก ๆ 5 วินาที
+    }, 1000); 
 
-    // ล้าง interval เมื่อ component ถูกทำลาย
     return () => clearInterval(intervalId);
   }, [])
 
+
   return (
     <View style={{ flex: 1 }}>
-      {/* Disable interaction when loading */}
       <View
         style={{ flex: 1 }}
-        pointerEvents={isLoading ? "none" : "auto"} // Disable interaction when loading
+        pointerEvents={isLoading ? "none" : "auto"} 
       >
         <HeaderComponent
           showBackIcon={false}
@@ -105,12 +101,11 @@ const LoginPage: React.FC = () => {
             <Text style={globalStyle.largeText}>เข้าสู่ระบบ</Text>
           </View>
 
-          {/* UserName Input */}
           <View style={LoginStyle.titleInputStyle}>
             <Text style={globalStyle.smallText}>Username</Text>
           </View>
           <Input
-            style={LoginStyle.inputStyle}
+            style={[LoginStyle.inputStyle ,{borderColor:primaryColor}]}
             inputContainerStyle={{ borderBottomWidth: 0 }}
             placeholder="ชื่อบัญชี"
             inputStyle={[globalStyle.smallText, LoginStyle.placeholderStyle]}
@@ -122,9 +117,8 @@ const LoginPage: React.FC = () => {
             <Text style={globalStyle.smallText}>Password</Text>
           </View>
 
-          {/* Password Input */}
           <Input
-            style={LoginStyle.inputStyle}
+            style={[LoginStyle.inputStyle ,{borderColor:primaryColor}]}
             inputContainerStyle={{ borderBottomWidth: 0 }}
             placeholder="รหัสผ่าน"
             inputStyle={[globalStyle.smallText, LoginStyle.placeholderStyle]}
@@ -143,22 +137,14 @@ const LoginPage: React.FC = () => {
 
           {/* Login Button */}
           <TouchableOpacity
-            style={LoginStyle.loginButtonStyle}
+            style={[LoginStyle.loginButtonStyle, { backgroundColor: primaryColor }]}  // ใช้สีที่อัปเดต
             onPress={handleLoginPress}
-            disabled={isLoading} // Disable button when loading
+            disabled={isLoading}
           >
-            <Text style={[LoginStyle.loginButtonText,{color:"white"} ]}>
+            <Text style={[LoginStyle.loginButtonText, { color: "white" }]}>
               {isLoading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
             </Text>
           </TouchableOpacity>
-
-          {/* <View style={LoginStyle.forgotPasswordContainerStyle}>
-            <TouchableOpacity onPress={handleForgotPasswordPress} disabled={isLoading}>
-              <Text style={[LoginStyle.forgotPasswordStyle, globalStyle.smallText]}>
-                ลืมรหัสผ่าน ?
-              </Text>
-            </TouchableOpacity>
-          </View> */}
         </View>
       </View>
 
@@ -191,7 +177,6 @@ const LoginStyle = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     borderWidth: 2,
-    borderColor: globalStyle.primaryColor.color,
     height: 45,
   },
   placeholderStyle: {
@@ -208,21 +193,7 @@ const LoginStyle = StyleSheet.create({
     top: "50%",
     transform: [{ translateY: -12 }],
   },
-  forgotPasswordContainerStyle: {
-    margin: 10,
-    justifyContent: "flex-start",
-    alignItems: "flex-end",
-    width: "100%",
-  },
-  forgotPasswordStyle: {
-    fontSize: 14,
-    color: "#8F9090",
-    textAlign: "right",
-    paddingRight: 20,
-    textDecorationLine: "underline",
-  },
   loginButtonStyle: {
-    backgroundColor: globalStyle.primaryColor.color,
     borderRadius: 8,
     paddingVertical: 12,
     marginHorizontal: 40,

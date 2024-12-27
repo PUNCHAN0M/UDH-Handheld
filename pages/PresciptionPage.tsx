@@ -31,14 +31,14 @@ import { playSound } from "@/utility/PrescriptionUtils"
 import { PendingRoute } from "./PrescriptionRoute/PendingRoute";
 import { CompletedRoute } from "./PrescriptionRoute/CompletedRoute";
 import { globalStyle } from "@/assets/globalStyle";
-
+import { useColorContext } from "@/components/UIelements/DialogComponent/ColorContext";
 // PrescriptionPage Component
 export default function PrescriptionPage() {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
   
   const router = useRouter();
-
+  const {secondaryColor} = useColorContext()
   const renderScene = SceneMap({
     first: () => <PendingRoute/>,
     second: () => <CompletedRoute/>,
@@ -58,7 +58,7 @@ export default function PrescriptionPage() {
       {...props}
       style={styles.tabBar}
       indicatorStyle={{
-        backgroundColor: globalStyle.secondaryColor.color,
+        backgroundColor: secondaryColor,
         height: 4,
         borderRadius: 8,
       }}

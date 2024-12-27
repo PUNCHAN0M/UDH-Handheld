@@ -2,7 +2,6 @@ import { StyleSheet, Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
 import HeaderComponent from "@/components/layouts/HeaderComponent";
 
-
 export const globalStyle = StyleSheet.create({
   primaryColor: { color: "#ca00fc" },
   secondaryColor: { color: "#d8a9fc" },

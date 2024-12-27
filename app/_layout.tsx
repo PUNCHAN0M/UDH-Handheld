@@ -1,9 +1,11 @@
 import { Stack, useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { SessionProvider } from '@/context/authentication';
+import { ColorProvider } from '@/components/UIelements/DialogComponent/ColorContext';
 
 export default function RootLayout () {
     return (
+        <ColorProvider>
         <SessionProvider>
             <Stack 
                 screenOptions={{
@@ -14,6 +16,7 @@ export default function RootLayout () {
             <Stack.Screen name="(app)"/>
         </Stack>
         </SessionProvider>
+        </ColorProvider>
         
     );
 }

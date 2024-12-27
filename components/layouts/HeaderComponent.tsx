@@ -16,6 +16,8 @@ import { useSession } from "@/context/authentication";
 import CustomDialog from "../UIelements/DialogComponent/CustomDialog";
 import IpDialog from "../UIelements/DialogComponent/IpDialog";
 import ColorSelectedDialog from "../UIelements/DialogComponent/ColorSelectedDialog";
+import { useColorContext } from "../UIelements/DialogComponent/ColorContext";
+
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
@@ -55,6 +57,9 @@ const HeaderComponent: React.FC<TopnavProps> = ({
     confirmOnPress?: () => void;
     onClose?: (() => void) | (() => void)[];
   } | null>(null);
+
+  const { primaryColor , tertiaryColor } = useColorContext(); // ดึงค่าสีจาก Context
+
 
   const handleBackPress = () => {
     console.log("ปุ่มย้อนกลับถูกกด"); // แสดงข้อความใน console เมื่อปุ่มย้อนกลับถูกกด
@@ -145,8 +150,8 @@ const HeaderComponent: React.FC<TopnavProps> = ({
           />
         </View>
       )}
-      <View style={TopnavStyle.TopNav}>
-        {/* Back button */}
+    <View style={[TopnavStyle.TopNav, { backgroundColor: primaryColor }]}>
+    {/* Back button */}
         <View style={TopnavStyle.LeftComponent}>
           {showBackIcon && (
             <TouchableOpacity onPress={handleBackPress}>
@@ -187,7 +192,6 @@ const HeaderComponent: React.FC<TopnavProps> = ({
         <ColorSelectedDialog
           visible={isPopupVisible}
           onClose={()=> setPopupVisible(false)}
-          onColorsSelected={handleColorSelection}
         />
       </View>
     </View>
@@ -202,7 +206,6 @@ const TopnavStyle = StyleSheet.create({
     zIndex: 100,
   },
   TopNav: {
-    backgroundColor: "#d8a9fc",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
