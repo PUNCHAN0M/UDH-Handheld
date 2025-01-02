@@ -197,13 +197,20 @@ const HeaderComponent: React.FC<TopnavProps> = ({
           onSignOut={handleSignOut} // Pass the handleSignOut function
         />
 
+        {/* Setting */}
         <Dialog
           isVisible={isPopupVisible}
           onBackdropPress={() => setPopupVisible(!isPopupVisible)}
         >
-          <Text style={[globalStyle.largeText, { textAlign: "center",marginBottom:10,fontWeight:"bold" }]}>
+          <Text
+            style={[
+              globalStyle.largeText,
+              { textAlign: "center", marginBottom: 10, fontWeight: "bold" },
+            ]}
+          >
             Setting
           </Text>
+
           <View style={{ height: 80, justifyContent: "space-between" }}>
             <SmallButton
               buttonTitle="Ip Setting"
@@ -213,12 +220,14 @@ const HeaderComponent: React.FC<TopnavProps> = ({
               buttonTitle="Color Setting"
               onPress={() => handleOnColorIpSetting()}
             ></SmallButton>
-          </View>{" "}
+          </View>
         </Dialog>
+
         <IpDialog
           visible={isPopupIpVisible}
           onClose={() => setPopupIpVisible(!isPopupIpVisible)}
         />
+
         <ColorSelectedDialog
           visible={isPopupColorVisible}
           onClose={() => setIsPopupColorVisible(!isPopupColorVisible)}
