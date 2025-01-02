@@ -244,7 +244,6 @@ const DetailsPrescriptionPage = () => {
 
   // ฟังก์ชันสำหรับ toggle รายการทั้งหมด
   const handleToggleFilteredMedicines = () => {
-
     const filteredMedicines = filterMedicines();
 
     // ตรวจสอบสถานะการเลือกปัจจุบันของรายการที่ตรงเงื่อนไข
@@ -963,10 +962,7 @@ const DetailsPrescriptionPage = () => {
       {/* ปุ่ม TouchableOpacity ของจัดตู้ */}
       {prescription.prescrip_status !== "รอตรวจสอบ" && !Flatlist2Toggle && (
         <TouchableOpacity
-          style={[
-            styles.absoluteButton,
-            { backgroundColor: primaryColor},
-          ]}
+          style={[styles.absoluteButton, { backgroundColor: primaryColor }]}
           onPress={() => handleToggleFilteredMedicines()}
         >
           <Text style={globalStyle.tinyText}>เลือกจัดตู้ทั้งหมด</Text>
