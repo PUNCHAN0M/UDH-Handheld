@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 80,
     left: 10,
-    zIndex: 10,
+    zIndex: 5000,
   },
   label: {
     fontSize: 18,
