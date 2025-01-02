@@ -202,27 +202,35 @@ const DetailsPrescriptionPage = () => {
                 .map((cabinetItem: { HouseId: any }) => cabinetItem.HouseId)
                 .join(", ")
             : "ไม่มีข้อมูล";
-
-        // เช็คว่า sshelf มีตัวอักษรภาษาอังกฤษ (a-z หรือ A-Z)
-        const containsLetters = /^\d+$/.test(sshelf);
-        const containsComma = sshelf.includes(","); // ตรวจสอบเครื่องหมายจุลภาค
-
-        console.log("sshelf", sshelf, containsLetters, containsComma);
-
-        if (containsLetters) {
-          flatList2.current += 1; // เพิ่มค่าผ่าน useRef
+  
+        // แสดงข้อมูลทั้งหมดก่อนการคำนวณ
+        console.log("sshelf:", sshelf);
+  
+        // แยกค่า sshelf ออกเป็นอาร์เรย์
+        const sshelfArray = sshelf.split(",").map((item: string) => item.trim());
+  
+        // กรองเฉพาะตัวเลขล้วนที่มีค่าใน sshelfArray
+        const numbersOnly = sshelfArray.filter((item: string) => /^\d+$/.test(item));
+  
+        // ใช้ Set เพื่อลบค่าซ้ำ
+        const uniqueNumbers = new Set(numbersOnly);
+  
+        // บวกค่าหากพบเลขซ้ำ
+        if (numbersOnly.length === uniqueNumbers.size) {
+          flatList2.current += numbersOnly.length; // ถ้าไม่มีซ้ำ บวกจำนวนตัวเลขทั้งหมด
+        } else {
+          flatList2.current += uniqueNumbers.size; // ถ้ามีซ้ำ บวกจำนวนเลขไม่ซ้ำ
         }
-
-        if (containsComma) {
-          flatList2.current += 1; // เพิ่มค่าผ่าน useRef
-        }
+  
+        console.log("numbersOnly:", numbersOnly, "Unique Numbers:", uniqueNumbers);
       }
     });
-
+  
     // อัปเดตค่าที่ใช้ใน UI
     setFlatlist2Count(flatList2.current);
   }, []);
-
+  
+  
   const filterMedicines = (): MedicineList[] => {
     return prescription.arranged.filter((item) => {
       if (item.medicine && item.medicine_amount !== null) {
