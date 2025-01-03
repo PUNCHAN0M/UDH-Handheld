@@ -170,7 +170,7 @@ const ColorInput: React.FC<ColorInputProps> = ({ visible, onClose }) => {
         <Button title="Close" onPress={onClose} color="red" />
       </View>
     </View>
-  ) : null; // Close the component when not visible
+  ) : <></>; // Close the component when not visible
 };
 
 const styles = StyleSheet.create({
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     position: "absolute",
-    top: 80,
+    top: 55,
     left: 10,
     zIndex: 5000,
   },

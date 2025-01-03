@@ -102,6 +102,8 @@ const HeaderComponent: React.FC<TopnavProps> = ({
   }, []);
   const handleSettingPressed = () => {
     setPopupVisible(true); // Show the SignOutDialog
+    setPopupIpVisible(false);
+    setIsPopupColorVisible(false);
   };
 
   const handleAccountPressed = () => {
@@ -144,7 +146,7 @@ const HeaderComponent: React.FC<TopnavProps> = ({
   };
 
   return (
-    <View>
+    <View style={{zIndex:5000}}>
       {showDialog && dialogProps && (
         <View style={TopnavStyle.test}>
           <CustomDialog
@@ -242,7 +244,7 @@ const TopnavStyle = StyleSheet.create({
     width: "100%",
     height: screenHeight, // ใช้ screenHeight ที่คำนวณจาก Dimensions
     position: "absolute",
-    zIndex: 100,
+    zIndex: 5000,
   },
   TopNav: {
     flexDirection: "row",

@@ -84,7 +84,7 @@ const LoginPage: React.FC = () => {
 
 
   return (
-    <View style={{ flex: 1,zIndex: 1 }}>
+    <View style={{ flex: 1 }}>
       <View
         style={{ flex: 1 }}
         pointerEvents={isLoading ? "none" : "auto"} 
